@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= post.title %></title>
+</head>
+<body>
+    
+    <h1><%= post.title %></h1>
+    <p><%= post.content %></p>
+
+    <h2>Comments</h2>
+    <ul>
+        <% (post.comments || []).forEach(comment => { %>
+            <li><strong><%= comment.user?.name || "Anonymous" %>:</strong> <%= comment.content %></li>
+        <% }); %>
+    </ul>
+
+    <h3>Add a Comment</h3>
+    <form action="/posts/<%= post.id %>/comments" method="POST">
+        <input type="hidden" name="authorId" value="1"> 
+        <textarea name="content" required></textarea>
+        <button type="submit">Post Comment</button>
+    </form>
+    
+
+    <a href="/">Back to Home</a>
+</body>
+</html>
