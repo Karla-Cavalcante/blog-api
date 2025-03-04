@@ -1,21 +1,21 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
 
 const BlogHome = () => {
     const [posts, setPosts] = useState([]);
 
     const fetchPosts = async () => {
         try {
-            const response = await axios.get("http://localhost:3000/posts"); // ✅ Fetch only published posts
-            setPosts(response.data);
-            console.log("✅ Fetched posts:", response.data);
+            const response = await fetch("http://localhost:3000/posts");
+            if (!response.ok) throw new Error("Failed to fetch posts");
+            const data = await response.json();
+            setPosts(data);
         } catch (error) {
             console.error("❌ Error fetching posts:", error);
         }
     };
 
     useEffect(() => {
-        fetchPosts(); // ✅ Call function correctly inside useEffect
+        fetchPosts();
     }, []);
 
     return (
