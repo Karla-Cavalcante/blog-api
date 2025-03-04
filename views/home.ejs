@@ -4,22 +4,70 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Blog Home</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: auto;
+            padding: 20px;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+        h1 {
+            text-align: center;
+        }
+        .no-posts {
+            text-align: center;
+            font-size: 18px;
+            color: #888;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+        li {
+            padding: 15px;
+            margin: 10px 0;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        a {
+            text-decoration: none;
+            font-size: 18px;
+            font-weight: bold;
+            color: #007bff;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        .post-meta {
+            font-size: 14px;
+            color: #666;
+        }
+        .post-content-preview {
+            font-size: 16px;
+            color: #555;
+            margin-top: 5px;
+        }
+    </style>
 </head>
 <body>
 
     <h1>Welcome to the Blog</h1>
 
     <% if (posts.length === 0) { %>
-        <p>No posts available.</p>
+        <p class="no-posts">No posts available. Check back later!</p>
     <% } else { %>
         <ul>
             <% posts.forEach(post => { %>
-                <li>
-                    <h2>
+                <% if (post.published) { %>  
+                    <li>
                         <a href="/posts/<%= post.id %>"><%= post.title %></a>
-                    </h2>
-                    <p><%= post.content.substring(0, 100) %>...</p> 
-                </li>
+                        <p class="post-meta">Published on: <%= new Date(post.createdAt).toLocaleDateString() %></p>
+                        <p class="post-content-preview"><%= post.content.substring(0, 100) %>...</p>
+                    </li>
+                <% } %>
             <% }); %>
         </ul>
     <% } %>
