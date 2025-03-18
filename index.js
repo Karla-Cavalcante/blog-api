@@ -1,100 +1,111 @@
-import express from "express";
-import dotenv from "dotenv";
-import { PrismaClient } from "@prisma/client";
-import path from "path";
-import { fileURLToPath } from "url"; 
-import cors from "cors"; 
+import express from 'express';
+import cors from 'cors';
+import bcrypt from 'bcrypt'; 
 
-import postRoutes from "./routes/postRoutes.js";
-import commentRoutes from "./routes/commentRoutes.js";
-import authRoutes from "./routes/authRoutes.js"; 
-
-dotenv.config();
 const app = express();
-const prisma = new PrismaClient();
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 
-app.use(cors()); 
-
-
+app.use(cors({
+  origin: 'http://localhost:5173', 
+}));
 
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 
 
-app.set("view engine", "ejs");
-app.set("views", path.join(__dirname, "views"));
+const users = [
+  { username: 'admin', password: '$2b$10$GdE9C/XR525z72jzNvO9HO/MzkT4xzlwuEZioWBsJ67LffR0O3RJq', role: 'admin' }  // senha: 'senha123' já hasheada
+];
 
 
-app.use(express.static(path.join(__dirname, "public")));
+let posts = [
+  { id: 1, title: "Post 1", content: "Conteúdo do post 1", authorId: 1, comments: [] },
+  { id: 2, title: "Post 2", content: "Conteúdo do post 2", authorId: 2, comments: [] }
+];
 
 
-app.use("/api/auth", authRoutes); 
-app.use("/posts", postRoutes);
-app.use("/api/comments", commentRoutes);
+app.post('/api/login', (req, res) => {
+  const { username, password } = req.body;
 
-app.put("/posts/:id/publish", async (req, res) => {
-    const { id } = req.params;
+  
+  const user = users.find((user) => user.username === username);
 
-    try {
-        const updatedPost = await prisma.post.update({
-            where: { id: Number(id) },
-            data: { published: true },
-        });
-        res.json(updatedPost);
-    } catch (error) {
-        console.error("❌ Error publishing post:", error);
-        res.status(500).json({ message: "Error publishing post" });
-    }
+  if (user) {
+    bcrypt.compare(password, user.password, (err, result) => {
+      if (result) {
+        res.json({ message: 'Login bem-sucedido', username: user.username, role: user.role });
+      } else {
+        res.status(401).json({ message: 'Credenciais inválidas' });
+      }
+    });
+  } else {
+    res.status(401).json({ message: 'Credenciais inválidas' });
+  }
+});
+
+
+app.get('/api/posts', (req, res) => {
+  res.json(posts);  
+});
+
+app.post('/api/posts', (req, res) => {
+  const { title, content, authorId } = req.body;
+
+  if (!title || !content || !authorId) {
+    return res.status(400).json({ message: 'Todos os campos são obrigatórios' });
+  }
+
+  const newPost = {
+    id: posts.length + 1,  
+    title,
+    content,
+    authorId,
+    comments: []
+  };
+
+  posts.push(newPost);  
+  return res.status(201).json(newPost);  
+});
+
+
+app.get('/', (req, res) => {
+  res.send('Servidor funcionando!');
+});
+
+
+app.post('/api/posts/:id/comments', (req, res) => {
+  const postId = parseInt(req.params.id);  
+  const { content, authorId } = req.body;  
+
+  const post = posts.find((p) => p.id === postId);  
+
+  if (post) {
+    const newComment = { content, authorId, id: post.comments.length + 1 };  
+    post.comments.push(newComment);  
+
+    return res.status(201).json(newComment);  
+  } else {
+    return res.status(404).json({ message: "Post não encontrado" });
+  }
 });
 
 
 
-app.get("/posts/:id", async (req, res) => {
-    const { id } = req.params;
+app.delete('/api/posts/:id', (req, res) => {
+  const postId = parseInt(req.params.id); 
 
-    try {
-        const post = await prisma.post.findUnique({
-            where: { id: Number(id) },
-            include: { comments: true } 
-        });
-
-        if (!post) return res.status(404).send("Post not found");
-
-        res.render("post", { post });
-    } catch (error) {
-        res.status(500).send("Error loading post");
-    }
+  // Encontrar o post
+  const postIndex = posts.findIndex((post) => post.id === postId);
+  
+  if (postIndex !== -1) {
+    posts.splice(postIndex, 1); 
+    return res.status(200).json({ message: 'Post excluído com sucesso' });
+  } else {
+    return res.status(404).json({ message: 'Post não encontrado' });
+  }
 });
 
 
-
-app.get("/", async (req, res) => {
-    try {
-        const posts = await prisma.post.findMany({
-            where: { published: true }
-        });
-        
-        console.log("Posts sent to EJS:", posts); 
-        res.render("home", { posts });
-    } catch (error) {
-        console.error("🔥 Error loading posts:", error);
-        res.status(500).send("Error loading posts: " + error.message);
-    }
+const PORT = 5001;
+app.listen(PORT, () => {
+  console.log(`Servidor rodando na porta ${PORT}`);
 });
-
-
-app.get("/hello", async (req, res) => {
-    try {
-        res.json({Response:"Hello World"}); 
-    } catch (error) {
-        console.error("🔥 Error loading posts:", error);
-        res.status(500).send("Error loading posts: " + error.message);
-    }
-});
-
-const PORT = process.env.PORT || 5001;
-app.listen(PORT, () => console.log(`✅ Server running on port ${PORT}`));
