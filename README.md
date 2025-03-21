@@ -1,30 +1,28 @@
-# Blog Tech
+# #Blog Tech - Backend
+This is the backend of the Blog Tech project, responsible for handling authentication, database operations, and API requests. It provides a RESTful API that allows users to view posts and comments, while administrators can create, edit, and delete posts.
 
-Este é um projeto de blog simples, com funcionalidade de criação de posts, visualização, edição e exclusão. O aplicativo permite que um administrador crie novos posts, visualize posts existentes e edite ou exclua posts. Os usuários podem acessar e visualizar posts, além de interagir com os comentários.
+## Technologies Used
+- Node.js – JavaScript runtime for backend development
+- Express.js – Web framework for handling API routes
+- PostgreSQL – Database for storing posts, users, and comments (can be replaced with another DB)
+- JWT (JSON Web Tokens) – Used for user authentication
+- Bcrypt – For hashing user passwords
 
-## Funcionalidades
+## Features
+✅ User Authentication – Login system with JWT authentication
+✅ Post Management – Admins can create, edit, and delete posts
+✅ Comment System – Users can add comments without authentication
+✅ Secure Passwords – Passwords are hashed using Bcrypt
+✅ REST API – Fully functional API with structured routes
 
-- **Autenticação de Usuário**: Login com sistema de autenticação simples.
-- **Criação de Posts**: O administrador pode criar novos posts e definir um autor.
-- **Edição e Exclusão de Posts**: O administrador pode editar e excluir posts.
-- **Visualização de Posts**: Usuários podem visualizar posts individuais e comentários associados.
-- **Seção de Comentários**: Os posts podem ter comentários, que são exibidos na página do post.
+## Prerequisites
+Before running the project, ensure you have the following installed:
 
-## Tecnologias Utilizadas
+- Node.js (Latest version recommended)
+- PostgreSQL (or another relational database)
 
-- Node.js
-- Express
-- PostgreSQL (ou outro banco de dados)
-- JWT (JSON Web Tokens) para autenticação
-- Bcrypt para hash de senhas
+## Project Structure
+The project is divided into two separate repositories:
 
-## Pré-requisitos
-
-Certifique-se de ter o Node.js instalado em sua máquina. Caso não tenha, baixe e instale a versão mais recente do [site oficial do Node.js](https://nodejs.org/).
-Estrutura do Projeto
-
-## O projeto está dividido em dois repositórios separados:
-
-Frontend: [link para o repositório do frontend](https://github.com/Karla-Cavalcante/frontend-blog-api) (React + Vite)
-Backend: [link para o repositório do backend](https://github.com/Karla-Cavalcante/blog-api) (Node.js + Express)
-
+Frontend: [[Frontend Repository Link](https://github.com/Karla-Cavalcante/frontend-blog-api)] (React + Vite)
+Backend: [[Backend Repository Link](https://github.com/Karla-Cavalcante/blog-api)] (Node.js + Express)
