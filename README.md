@@ -9,11 +9,11 @@ This is the backend of the Blog Tech project, responsible for handling authentic
 - Bcrypt – For hashing user passwords
 
 ## Features
-✅ User Authentication – Login system with JWT authentication
-✅ Post Management – Admins can create, edit, and delete posts
-✅ Comment System – Users can add comments without authentication
-✅ Secure Passwords – Passwords are hashed using Bcrypt
-✅ REST API – Fully functional API with structured routes
+- ✅ User Authentication – Login system with JWT authentication
+- ✅ Post Management – Admins can create, edit, and delete posts
+- ✅ Comment System – Users can add comments without authentication
+- ✅ Secure Passwords – Passwords are hashed using Bcrypt
+- ✅ REST API – Fully functional API with structured routes
 
 ## Prerequisites
 Before running the project, ensure you have the following installed:
