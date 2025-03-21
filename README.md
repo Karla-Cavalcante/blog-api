@@ -12,11 +12,11 @@ Este é um projeto de blog simples, com funcionalidade de criação de posts, vi
 
 ## Tecnologias Utilizadas
 
-- React.js
-- React Router
-- Vite
-- CSS (Customizado)
-- Consumo de API REST (fetch)
+- Node.js
+- Express
+- PostgreSQL (ou outro banco de dados)
+- JWT (JSON Web Tokens) para autenticação
+- Bcrypt para hash de senhas
 
 ## Pré-requisitos
 
